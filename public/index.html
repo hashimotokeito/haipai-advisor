@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <title>ミニチャット</title>
+</head>
+
+<body>
+  <input id="textInput" type="text" placeholder="例: 1m,1m,1m,9m,4p,5p,6p,7s,8s,9s,東,東,中">
+  <button id="sendButton">送信</button>
+  <p id="result"></p>
+
+  <script>
+    document.getElementById('sendButton').addEventListener('click', async () => {
+      const text = document.getElementById('textInput').value;
+      const hand = text.split(',').map(tile => tile.trim());
+
+      const response = await fetch('/api/evaluate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ hand })
+      });
+      const data = await response.json();
+      document.getElementById('result').textContent =
+        `シャンテン数: ${data.shanten}(面子${data.melds}・搭子${data.taatsu}・雀頭${data.hasPair ? 'あり' : 'なし'})`;
+    });
+  </script>
+</body>
+
+</html>

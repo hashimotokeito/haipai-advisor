@@ -1,0 +1,25 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: db
+      DB_USER: nekko
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: nekko_lesson
+    depends_on:
+      - db
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: nekko
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: nekko_lesson
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  db_data:
+
